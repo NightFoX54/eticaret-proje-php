@@ -37,7 +37,7 @@
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Adreslerim</h5>
-                    <button type="button" class="btn btn-sm btn-primary" id="addAddressBtn">
+                    <button type="button" class="btn btn-sm btn-primary" id="addAddressBtn" style="background: linear-gradient(135deg, #9D7FC7 0%, #8B6FC7 100%); border: none;">
                         <i class="fas fa-plus"></i> Yeni Adres Ekle
                     </button>
                 </div>
@@ -57,7 +57,7 @@
                         <i class="fas fa-map-marker-alt fa-3x text-muted mb-3"></i>
                         <h5>Henüz adres kaydınız bulunmuyor.</h5>
                         <p class="text-muted">Adres ekleyerek alışverişlerinizde hızlıca tercih edebilirsiniz.</p>
-                        <button type="button" class="btn btn-primary mt-2" id="noAddressAddBtn">
+                        <button type="button" class="btn btn-primary mt-2" id="noAddressAddBtn" style="background: linear-gradient(135deg, #9D7FC7 0%, #8B6FC7 100%); border: none;">
                             <i class="fas fa-plus"></i> Yeni Adres Ekle
                         </button>
                     </div>
@@ -136,7 +136,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
-                <button type="button" class="btn btn-primary" id="saveAddressBtn">Kaydet</button>
+                <button type="button" class="btn btn-primary" id="saveAddressBtn" style="background: linear-gradient(135deg, #9D7FC7 0%, #8B6FC7 100%); border: none;">Kaydet</button>
             </div>
         </div>
     </div>

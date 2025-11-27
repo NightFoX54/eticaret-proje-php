@@ -61,7 +61,7 @@ $kullanici_id = $_SESSION['kullanici_id'];
                         </div>
                         
                         <div class="mt-4">
-                            <button type="button" class="btn btn-primary" onclick="nextStep()" id="next-step-1">
+                            <button type="button" class="btn btn-primary" onclick="nextStep()" id="next-step-1" style="background: linear-gradient(135deg, #9D7FC7 0%, #8B6FC7 100%); border: none;">
                                 Devam Et <i class="fas fa-arrow-right ms-2"></i>
                             </button>
                         </div>
@@ -76,7 +76,7 @@ $kullanici_id = $_SESSION['kullanici_id'];
                                 <div class="payment-method-card" onclick="selectPaymentMethod('havale')">
                                     <div class="card">
                                         <div class="card-body text-center">
-                                            <i class="fas fa-university fa-3x text-primary mb-3"></i>
+                                            <i class="fas fa-university fa-3x mb-3" style="color: #9D7FC7;"></i>
                                             <h6>Havale/EFT</h6>
                                             <p class="text-muted small">Banka hesaplarımıza havale yapabilirsiniz</p>
                                         </div>
@@ -87,7 +87,7 @@ $kullanici_id = $_SESSION['kullanici_id'];
                                 <div class="payment-method-card" onclick="selectPaymentMethod('kart')">
                                     <div class="card">
                                         <div class="card-body text-center">
-                                            <i class="fas fa-credit-card fa-3x text-success mb-3"></i>
+                                            <i class="fas fa-credit-card fa-3x mb-3" style="color: #8B6FC7;"></i>
                                             <h6>Kredi Kartı</h6>
                                             <p class="text-muted small">Güvenli ödeme ile kartınızla ödeyin</p>
                                         </div>
@@ -100,7 +100,7 @@ $kullanici_id = $_SESSION['kullanici_id'];
                             <button type="button" class="btn btn-secondary" onclick="prevStep()">
                                 <i class="fas fa-arrow-left me-2"></i>Geri
                             </button>
-                            <button type="button" class="btn btn-primary" onclick="nextStep()" id="next-step-2" disabled>
+                            <button type="button" class="btn btn-primary" onclick="nextStep()" id="next-step-2" disabled style="background: linear-gradient(135deg, #9D7FC7 0%, #8B6FC7 100%); border: none;">
                                 Devam Et <i class="fas fa-arrow-right ms-2"></i>
                             </button>
                         </div>
@@ -118,7 +118,7 @@ $kullanici_id = $_SESSION['kullanici_id'];
                             <button type="button" class="btn btn-secondary" onclick="prevStep()">
                                 <i class="fas fa-arrow-left me-2"></i>Geri
                             </button>
-                            <button type="button" class="btn btn-success" onclick="placeOrder()" id="place-order-btn">
+                            <button type="button" class="btn btn-success" onclick="placeOrder()" id="place-order-btn" style="background: linear-gradient(135deg, #8B6FC7 0%, #7A5FB8 100%); border: none;">
                                 <i class="fas fa-check me-2"></i>Siparişi Onayla
                             </button>
                         </div>
@@ -253,7 +253,7 @@ $kullanici_id = $_SESSION['kullanici_id'];
 }
 
 .step.active:not(:last-child)::after {
-    background-color: #007bff;
+    background: linear-gradient(90deg, #9D7FC7 0%, #8B6FC7 100%);
 }
 
 .step-number {
@@ -270,8 +270,9 @@ $kullanici_id = $_SESSION['kullanici_id'];
 }
 
 .step.active .step-number {
-    background-color: #007bff;
+    background: linear-gradient(135deg, #9D7FC7 0%, #8B6FC7 100%);
     color: white;
+    box-shadow: 0 4px 12px rgba(177, 156, 217, 0.4);
 }
 
 .step-title {
@@ -281,7 +282,7 @@ $kullanici_id = $_SESSION['kullanici_id'];
 }
 
 .step.active .step-title {
-    color: #007bff;
+    color: #8B6FC7;
     font-weight: bold;
 }
 
@@ -303,8 +304,9 @@ $kullanici_id = $_SESSION['kullanici_id'];
 }
 
 .payment-method-card.selected .card {
-    border-color: #007bff;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    border-color: #9D7FC7;
+    box-shadow: 0 0 0 0.2rem rgba(177, 156, 217, 0.25);
+    background: linear-gradient(135deg, #E8DFF0 0%, #D9CEE8 100%);
 }
 
 .address-card {
@@ -314,12 +316,13 @@ $kullanici_id = $_SESSION['kullanici_id'];
 }
 
 .address-card:hover {
-    border-color: #007bff;
+    border-color: #9D7FC7;
 }
 
 .address-card.selected {
-    border-color: #007bff;
-    background-color: #f8f9fa;
+    border-color: #9D7FC7;
+    background: linear-gradient(135deg, #E8DFF0 0%, #D9CEE8 100%);
+    box-shadow: 0 4px 12px rgba(177, 156, 217, 0.2);
 }
 
 @media (max-width: 768px) {

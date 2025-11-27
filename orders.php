@@ -64,7 +64,7 @@
                         <i class="fas fa-shopping-bag fa-3x text-muted mb-3"></i>
                         <h5>Henüz siparişiniz bulunmuyor.</h5>
                         <p class="text-muted">Alışverişe başlayarak siparişlerinizi burada görebilirsiniz.</p>
-                        <a href="index.php" class="btn btn-primary">Alışverişe Başla</a>
+                        <a href="index.php" class="btn btn-primary" style="background: linear-gradient(135deg, #9D7FC7 0%, #8B6FC7 100%); border: none;">Alışverişe Başla</a>
                     </div>
                     
                     <!-- Pagination -->
@@ -187,7 +187,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
-                <button type="button" class="btn btn-primary" id="submitReview">Gönder</button>
+                <button type="button" class="btn btn-primary" id="submitReview" style="background: linear-gradient(135deg, #9D7FC7 0%, #8B6FC7 100%); border: none;">Gönder</button>
             </div>
         </div>
     </div>

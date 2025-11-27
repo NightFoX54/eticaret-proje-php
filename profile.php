@@ -61,7 +61,7 @@
                                 <input type="text" class="form-control" id="tel_no" name="tel_no" placeholder="05XX XXX XX XX">
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary" id="updateProfileBtn">Bilgilerimi Güncelle</button>
+                        <button type="submit" class="btn btn-primary" id="updateProfileBtn" style="background: linear-gradient(135deg, #9D7FC7 0%, #8B6FC7 100%); border: none;">Bilgilerimi Güncelle</button>
                     </form>
                 </div>
             </div>
@@ -85,7 +85,7 @@
                             <input type="password" class="form-control" id="confirmPassword" name="confirm_password" required>
                             <div class="invalid-feedback" id="passwordMismatch">Şifreler eşleşmiyor!</div>
                         </div>
-                        <button type="submit" class="btn btn-warning" id="updatePasswordBtn">Şifremi Güncelle</button>
+                        <button type="submit" class="btn btn-warning" id="updatePasswordBtn" style="background: linear-gradient(135deg, #8B6FC7 0%, #7A5FB8 100%); border: none; color: white;">Şifremi Güncelle</button>
                     </form>
                 </div>
             </div>

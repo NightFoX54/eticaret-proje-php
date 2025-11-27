@@ -62,7 +62,7 @@ $urun_id = intval($_GET['id']);
     <div class="card">
         <div class="card-header bg-white d-flex justify-content-between align-items-center">
             <h3 class="mb-0">Sorular</h3>
-            <button class="btn btn-primary btn-sm" id="ask-question-btn">
+            <button class="btn btn-primary btn-sm" id="ask-question-btn" style="background: linear-gradient(135deg, #9D7FC7 0%, #8B6FC7 100%); border: none;">
                 Soru Sor
             </button>
         </div>
@@ -103,7 +103,7 @@ $urun_id = intval($_GET['id']);
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
-                    <button type="button" class="btn btn-primary" id="submit-question-btn">Gönder</button>
+                    <button type="button" class="btn btn-primary" id="submit-question-btn" style="background: linear-gradient(135deg, #9D7FC7 0%, #8B6FC7 100%); border: none;">Gönder</button>
                 </div>
             </div>
         </div>
@@ -271,7 +271,7 @@ $urun_id = intval($_GET['id']);
         if (categories && categories.length > 0) {
             categoriesHtml = '<div class="mb-3">';
             categories.forEach(category => {
-                categoriesHtml += `<a href="kategori.php?id=${category.id}" class="badge bg-secondary text-decoration-none link-light me-1">${category.kategori_isim}</a> `;
+                categoriesHtml += `<a href="urunler.php?kategori=${category.id}" class="badge bg-secondary text-decoration-none link-light me-1">${category.kategori_isim}</a> `;
             });
             categoriesHtml += '</div>';
         }
@@ -293,7 +293,7 @@ $urun_id = intval($_GET['id']);
                     ${categoriesHtml}
                     
                     <div class="d-flex align-items-center mb-3">
-                        <span class="h3 text-primary mb-0" id="product-price">${parseFloat(product.urun_fiyat).toLocaleString('tr-TR', {style:'currency', currency:'TRY'})}</span>
+                        <span class="h3 mb-0" id="product-price" style="color: #8B6FC7;">${parseFloat(product.urun_fiyat).toLocaleString('tr-TR', {style:'currency', currency:'TRY'})}</span>
                         <div class="ms-auto">
                             <span class="badge bg-success" id="product-stock">Stokta: ${product.urun_stok}</span>
                         </div>
@@ -317,7 +317,7 @@ $urun_id = intval($_GET['id']);
                             <button class="btn btn-outline-secondary" type="button" id="increase-quantity">+</button>
                         </div>
                         
-                        <button type="button" class="btn btn-primary" id="add-to-cart-btn">
+                        <button type="button" class="btn btn-primary" id="add-to-cart-btn" style="background: linear-gradient(135deg, #9D7FC7 0%, #8B6FC7 100%); border: none;">
                             <i class="fas fa-cart-plus me-2"></i> Sepete Ekle
                         </button>
                         
@@ -444,13 +444,13 @@ $urun_id = intval($_GET['id']);
                                             $('.cart-badge').text(response.sepet_adet || 0);
                                             
                                             // Show success message
-                                            alert('Ürün sepete eklendi.');
+                                            showToast('Ürün sepete başarıyla eklendi!', 'success');
                                         } else {
-                                            alert(response.mesaj || 'Ürün sepete eklenirken bir hata oluştu.');
+                                            showToast(response.mesaj || 'Ürün sepete eklenirken bir hata oluştu.', 'error');
                                         }
                                     },
                                     error: function() {
-                                        alert('İşlem sırasında bir hata oluştu.');
+                                        showToast('İşlem sırasında bir hata oluştu.', 'error');
                                     }
                                 });
                             });
@@ -706,7 +706,7 @@ $urun_id = intval($_GET['id']);
                                         </h5>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <p class="fw-bold mb-0">${parseFloat(product.urun_fiyat).toLocaleString('tr-TR', {style:'currency', currency:'TRY'})}</p>
-                                            <button class="btn btn-primary btn-sm add-to-cart" data-product-id="${product.id}">
+                                            <button class="btn btn-primary btn-sm add-to-cart" data-product-id="${product.id}" style="background: linear-gradient(135deg, #9D7FC7 0%, #8B6FC7 100%); border: none;">
                                                 <i class="fas fa-cart-plus"></i>
                                             </button>
                                         </div>
@@ -807,7 +807,7 @@ $urun_id = intval($_GET['id']);
         const secenekId = $('#selected-secenek-id').val();
         
         if (!secenekId) {
-            alert('Lütfen önce bir ürün varyasyonu seçin.');
+            showToast('Lütfen önce bir ürün varyasyonu seçin.', 'warning');
             return;
         }
         
@@ -826,13 +826,13 @@ $urun_id = intval($_GET['id']);
                     $('.cart-badge').text(response.sepet_adet || 0);
                     
                     // Show success message
-                    alert('Ürün sepete eklendi.');
+                    showToast('Ürün sepete başarıyla eklendi!', 'success');
                 } else {
-                    alert(response.mesaj || 'Ürün sepete eklenirken bir hata oluştu.');
+                    showToast(response.mesaj || 'Ürün sepete eklenirken bir hata oluştu.', 'error');
                 }
             },
             error: function() {
-                alert('İşlem sırasında bir hata oluştu.');
+                showToast('İşlem sırasında bir hata oluştu.', 'error');
             }
         });
     }

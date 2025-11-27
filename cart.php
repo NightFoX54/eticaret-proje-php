@@ -52,7 +52,7 @@ $user_logged_in = isset($_SESSION['kullanici_id']);
                     <div id="coupon-alert" class="alert" role="alert" style="display:none;"></div>
                     <div class="input-group mb-3">
                         <input type="text" class="form-control" id="coupon-code" placeholder="Kupon kodu girin">
-                        <button class="btn btn-primary" type="button" id="apply-coupon">Uygula</button>
+                        <button class="btn btn-primary" type="button" id="apply-coupon" style="background: linear-gradient(135deg, #9D7FC7 0%, #8B6FC7 100%); border: none;">Uygula</button>
                     </div>
                     <div id="active-coupon" style="display:none;">
                         <div class="d-flex justify-content-between align-items-center">
@@ -71,7 +71,7 @@ $user_logged_in = isset($_SESSION['kullanici_id']);
                 <a href="index.php" class="btn btn-outline-secondary">
                     <i class="fas fa-arrow-left me-2"></i>Alışverişe Devam Et
                 </a>
-                <button type="button" class="btn btn-success" id="proceed-checkout">
+                <button type="button" class="btn btn-success" id="proceed-checkout" style="background: linear-gradient(135deg, #8B6FC7 0%, #7A5FB8 100%); border: none;">
                     <i class="fas fa-check-circle me-2"></i>Siparişi Tamamla
                 </button>
             </div>
@@ -86,9 +86,9 @@ $user_logged_in = isset($_SESSION['kullanici_id']);
         </div>
         <h4>Sepetiniz Boş</h4>
         <p class="text-muted">Sepetinizde henüz ürün bulunmamaktadır.</p>
-        <a href="index.php" class="btn btn-primary mt-3">
-            <i class="fas fa-shopping-bag me-2"></i>Alışverişe Başla
-        </a>
+                        <a href="index.php" class="btn btn-primary mt-3" style="background: linear-gradient(135deg, #9D7FC7 0%, #8B6FC7 100%); border: none;">
+                            <i class="fas fa-shopping-bag me-2"></i>Alışverişe Başla
+                        </a>
     </div>
 </template>
 
@@ -313,7 +313,9 @@ function updateCartItem(secenekId, change) {
                 cartBadge.textContent = data.sepet_adet;
             }
         } else {
-            alert(data.mesaj);
+            if (typeof showToast === 'function') {
+                showToast(data.mesaj || 'Sepet güncellenirken bir hata oluştu.', 'error');
+            }
         }
     })
     .catch(error => {
@@ -323,34 +325,50 @@ function updateCartItem(secenekId, change) {
 
 // Remove cart item
 function removeCartItem(secenekId) {
-    if (confirm('Bu ürünü sepetten çıkarmak istediğinize emin misiniz?')) {
-        fetch('nedmin/netting/islem.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            body: `islem=sepet_urun_sil&secenek_id=${secenekId}`
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.durum === 'success') {
-                // Reload cart to update the view
-                loadCart();
-                
-                // Update cart badge in header
-                const cartBadge = document.querySelector('.cart-badge');
-                if (cartBadge) {
-                    cartBadge.textContent = data.sepet_adet;
+    showConfirmModal(
+        'Ürünü Sepetten Çıkar',
+        'Bu ürünü sepetten çıkarmak istediğinize emin misiniz?',
+        'Çıkar',
+        'İptal',
+        function() {
+            fetch('nedmin/netting/islem.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: `islem=sepet_urun_sil&secenek_id=${secenekId}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.durum === 'success') {
+                    // Reload cart to update the view
+                    loadCart();
+                    
+                    // Update cart badge in header
+                    const cartBadge = document.querySelector('.cart-badge');
+                    if (cartBadge) {
+                        cartBadge.textContent = data.sepet_adet;
+                    }
+                    
+                    // Show success message
+                    if (typeof showToast === 'function') {
+                        showToast('Ürün sepetten başarıyla çıkarıldı.', 'success');
+                    }
+                } else {
+                    if (typeof showToast === 'function') {
+                        showToast(data.mesaj || 'Ürün sepetten çıkarılırken bir hata oluştu.', 'error');
+                    }
                 }
-            } else {
-                alert(data.mesaj);
-            }
-        })
-        .catch(error => {
-            console.error('Ürün sepetten silinirken bir hata oluştu:', error);
-        });
-    }
+            })
+            .catch(error => {
+                console.error('Ürün sepetten silinirken bir hata oluştu:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Ürün sepetten çıkarılırken bir hata oluştu.', 'error');
+                }
+            });
+        }
+    );
 }
 
 // Apply coupon
@@ -407,16 +425,85 @@ function removeCoupon() {
 
 // Show coupon alert
 function showCouponAlert(type, message) {
-    const alertEl = document.getElementById('coupon-alert');
-    alertEl.className = 'alert';
-    alertEl.classList.add(type === 'success' ? 'alert-success' : 'alert-danger');
-    alertEl.textContent = message;
-    alertEl.style.display = 'block';
+    if (typeof showToast === 'function') {
+        showToast(message, type === 'success' ? 'success' : 'error');
+    } else {
+        const alertEl = document.getElementById('coupon-alert');
+        alertEl.className = 'alert';
+        alertEl.classList.add(type === 'success' ? 'alert-success' : 'alert-danger');
+        alertEl.textContent = message;
+        alertEl.style.display = 'block';
+        
+        // Hide after 3 seconds
+        setTimeout(() => {
+            alertEl.style.display = 'none';
+        }, 3000);
+    }
+}
+
+// Show confirmation modal
+function showConfirmModal(title, message, confirmText, cancelText, onConfirm) {
+    // Create modal if it doesn't exist
+    let modal = document.getElementById('confirm-modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'confirm-modal';
+        modal.className = 'modal fade';
+        modal.setAttribute('tabindex', '-1');
+        modal.setAttribute('aria-labelledby', 'confirmModalLabel');
+        modal.setAttribute('aria-hidden', 'true');
+        modal.innerHTML = `
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content" style="border-radius: 15px; border: none; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);">
+                    <div class="modal-header" style="background: linear-gradient(135deg, #9D7FC7 0%, #8B6FC7 100%); border-radius: 15px 15px 0 0; border: none;">
+                        <h5 class="modal-title text-white" id="confirmModalLabel" style="font-weight: 600;">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <span id="confirm-modal-title"></span>
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" style="padding: 2rem;">
+                        <p id="confirm-modal-message" style="color: #555; font-size: 1rem; line-height: 1.6; margin: 0;"></p>
+                    </div>
+                    <div class="modal-footer" style="border-top: 1px solid rgba(157, 127, 199, 0.2); padding: 1rem 2rem;">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="confirm-modal-cancel" style="border-radius: 8px; padding: 0.5rem 1.5rem;">
+                            <i class="fas fa-times me-2"></i>
+                            <span></span>
+                        </button>
+                        <button type="button" class="btn btn-primary" id="confirm-modal-confirm" style="background: linear-gradient(135deg, #9D7FC7 0%, #8B6FC7 100%); border: none; border-radius: 8px; padding: 0.5rem 1.5rem;">
+                            <i class="fas fa-check me-2"></i>
+                            <span></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
     
-    // Hide after 3 seconds
-    setTimeout(() => {
-        alertEl.style.display = 'none';
-    }, 3000);
+    // Set modal content
+    document.getElementById('confirm-modal-title').textContent = title;
+    document.getElementById('confirm-modal-message').textContent = message;
+    document.getElementById('confirm-modal-confirm').querySelector('span').textContent = confirmText || 'Onayla';
+    document.getElementById('confirm-modal-cancel').querySelector('span').textContent = cancelText || 'İptal';
+    
+    // Remove previous event listeners
+    const confirmBtn = document.getElementById('confirm-modal-confirm');
+    const newConfirmBtn = confirmBtn.cloneNode(true);
+    confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+    
+    // Add event listener
+    newConfirmBtn.addEventListener('click', function() {
+        const bsModal = bootstrap.Modal.getInstance(modal);
+        bsModal.hide();
+        if (onConfirm && typeof onConfirm === 'function') {
+            onConfirm();
+        }
+    });
+    
+    // Show modal
+    const bsModal = new bootstrap.Modal(modal);
+    bsModal.show();
 }
 </script>
 

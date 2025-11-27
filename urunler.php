@@ -7,51 +7,501 @@ include 'header.php';
     <div class="row">
         <!-- Sidebar Filters -->
         <div class="col-lg-3">
-            <div class="card mb-4">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0">Filtreler</h5>
-                </div>
-                <div class="card-body">
-                    <!-- Category Filter -->
-                    <div class="mb-4">
-                        <h6 class="fw-bold mb-3">Kategoriler</h6>
-                        <div id="kategori-filtreler" class="overflow-auto" style="max-height: 250px;">
-                            <!-- Categories will be loaded via AJAX -->
-                            <div class="spinner-border spinner-border-sm text-primary" role="status">
-                                <span class="visually-hidden">Yükleniyor...</span>
+            <style>
+                .filter-sidebar {
+                    position: sticky;
+                    top: 20px;
+                }
+                
+                .filter-card {
+                    border: none;
+                    border-radius: 15px;
+                    box-shadow: 0 4px 20px rgba(157, 127, 199, 0.15);
+                    overflow: hidden;
+                    background: linear-gradient(135deg, #FFFFFF 0%, #F5F0FA 100%);
+                }
+                
+                .filter-header {
+                    background: linear-gradient(135deg, #9D7FC7 0%, #8B6FC7 100%);
+                    color: white;
+                    padding: 1.25rem 1.5rem;
+                    border: none;
+                    border-radius: 0;
+                }
+                
+                .filter-header h5 {
+                    margin: 0;
+                    font-weight: 700;
+                    font-size: 1.1rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                }
+                
+                .filter-header h5 i {
+                    font-size: 1.2rem;
+                }
+                
+                .filter-body {
+                    padding: 1.25rem;
+                }
+                
+                .filter-section {
+                    margin-bottom: 1.25rem;
+                    padding-bottom: 1rem;
+                    border-bottom: 1px solid rgba(157, 127, 199, 0.15);
+                }
+                
+                .filter-section:last-of-type {
+                    border-bottom: none;
+                    margin-bottom: 0.75rem;
+                }
+                
+                .filter-title {
+                    color: #7A5FB8;
+                    font-weight: 600;
+                    font-size: 0.85rem;
+                    margin-bottom: 0.75rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.4rem;
+                }
+                
+                .filter-title i {
+                    color: #9D7FC7;
+                    font-size: 0.9rem;
+                }
+                
+                .filter-content {
+                    max-height: 200px;
+                    overflow-y: auto;
+                    padding-right: 5px;
+                }
+                
+                .filter-content::-webkit-scrollbar {
+                    width: 5px;
+                }
+                
+                .filter-content::-webkit-scrollbar-track {
+                    background: #F5F0FA;
+                    border-radius: 10px;
+                }
+                
+                .filter-content::-webkit-scrollbar-thumb {
+                    background: linear-gradient(135deg, #9D7FC7 0%, #8B6FC7 100%);
+                    border-radius: 10px;
+                }
+                
+                .filter-content::-webkit-scrollbar-thumb:hover {
+                    background: linear-gradient(135deg, #8B6FC7 0%, #7A5FB8 100%);
+                }
+                
+                .filter-checkbox {
+                    margin-bottom: 0.4rem;
+                    display: flex;
+                    align-items: center;
+                    padding: 0.35rem 0.5rem;
+                    border-radius: 6px;
+                    transition: all 0.2s ease;
+                    cursor: pointer;
+                    position: relative;
+                }
+                
+                .filter-checkbox:hover {
+                    background: rgba(157, 127, 199, 0.08);
+                }
+                
+                .filter-checkbox input[type="checkbox"] {
+                    width: 16px;
+                    height: 16px;
+                    cursor: pointer;
+                    margin-right: 0.6rem;
+                    margin: 0;
+                    position: absolute;
+                    opacity: 0;
+                }
+                
+                .filter-checkbox input[type="checkbox"] + label {
+                    cursor: pointer;
+                    color: #555;
+                    font-size: 0.85rem;
+                    margin: 0;
+                    flex: 1;
+                    transition: all 0.2s ease;
+                    padding-left: 24px;
+                    position: relative;
+                    line-height: 1.4;
+                }
+                
+                .filter-checkbox input[type="checkbox"] + label::before {
+                    content: '';
+                    position: absolute;
+                    left: 0;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    width: 16px;
+                    height: 16px;
+                    border: 2px solid rgba(157, 127, 199, 0.4);
+                    border-radius: 4px;
+                    background: white;
+                    transition: all 0.2s ease;
+                }
+                
+                .filter-checkbox input[type="checkbox"] + label::after {
+                    content: '';
+                    position: absolute;
+                    left: 4px;
+                    top: 50%;
+                    transform: translateY(-50%) scale(0);
+                    width: 8px;
+                    height: 8px;
+                    background: white;
+                    border-radius: 2px;
+                    transition: transform 0.2s ease;
+                }
+                
+                .filter-checkbox input[type="checkbox"]:checked + label::before {
+                    background: linear-gradient(135deg, #9D7FC7 0%, #8B6FC7 100%);
+                    border-color: #9D7FC7;
+                }
+                
+                .filter-checkbox input[type="checkbox"]:checked + label::after {
+                    transform: translateY(-50%) scale(1);
+                }
+                
+                .filter-checkbox input[type="checkbox"]:checked + label {
+                    color: #7A5FB8;
+                    font-weight: 500;
+                }
+                
+                .filter-checkbox:hover input[type="checkbox"] + label::before {
+                    border-color: #9D7FC7;
+                }
+                
+                .price-inputs {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    margin-bottom: 0.75rem;
+                }
+                
+                .price-inputs input {
+                    flex: 1;
+                    border: 2px solid rgba(157, 127, 199, 0.3);
+                    border-radius: 6px;
+                    padding: 0.5rem 0.6rem;
+                    font-size: 0.85rem;
+                    transition: all 0.2s ease;
+                    background: white;
+                }
+                
+                .price-inputs input:focus {
+                    outline: none;
+                    border-color: #9D7FC7;
+                    box-shadow: 0 0 0 2px rgba(157, 127, 199, 0.15);
+                }
+                
+                .price-separator {
+                    color: #9D7FC7;
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                }
+                
+                .filter-btn {
+                    background: linear-gradient(135deg, #9D7FC7 0%, #8B6FC7 100%);
+                    border: none;
+                    color: white;
+                    padding: 0.5rem 1rem;
+                    border-radius: 6px;
+                    font-weight: 600;
+                    font-size: 0.85rem;
+                    transition: all 0.2s ease;
+                    width: 100%;
+                    box-shadow: 0 2px 8px rgba(157, 127, 199, 0.25);
+                }
+                
+                .filter-btn:hover {
+                    transform: translateY(-1px);
+                    box-shadow: 0 3px 12px rgba(157, 127, 199, 0.35);
+                    background: linear-gradient(135deg, #8B6FC7 0%, #7A5FB8 100%);
+                }
+                
+                .filter-btn:active {
+                    transform: translateY(0);
+                }
+                
+                .reset-btn {
+                    background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%);
+                    border: none;
+                    color: white;
+                    padding: 0.6rem 1rem;
+                    border-radius: 6px;
+                    font-weight: 600;
+                    font-size: 0.85rem;
+                    transition: all 0.2s ease;
+                    width: 100%;
+                    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.25);
+                    margin-top: 0.75rem;
+                }
+                
+                .reset-btn:hover {
+                    transform: translateY(-1px);
+                    box-shadow: 0 3px 12px rgba(255, 107, 107, 0.35);
+                    background: linear-gradient(135deg, #FF8E8E 0%, #FF6B6B 100%);
+                }
+                
+                .reset-btn:active {
+                    transform: translateY(0);
+                }
+                
+                .attribute-group {
+                    margin-bottom: 1rem;
+                }
+                
+                .attribute-title {
+                    color: #7A5FB8;
+                    font-weight: 600;
+                    font-size: 0.85rem;
+                    margin-bottom: 0.5rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.4rem;
+                }
+                
+                .attribute-title i {
+                    color: #9D7FC7;
+                    font-size: 0.8rem;
+                }
+                
+                .spinner-border-sm {
+                    color: #9D7FC7;
+                }
+                
+                .filter-content .spinner-border-sm {
+                    color: #9D7FC7;
+                }
+                
+                .text-muted {
+                    color: rgba(157, 127, 199, 0.7) !important;
+                }
+                
+                .text-danger {
+                    color: #FF6B6B !important;
+                }
+                
+                /* Sort Dropdown Styles */
+                .sort-wrapper {
+                    position: relative;
+                    display: inline-block;
+                }
+                
+                .sort-select {
+                    min-width: 220px;
+                    padding: 0.65rem 2.5rem 0.65rem 1rem;
+                    border: 2px solid rgba(157, 127, 199, 0.3);
+                    border-radius: 10px;
+                    background: white;
+                    color: #555;
+                    font-size: 0.9rem;
+                    font-weight: 500;
+                    cursor: pointer;
+                    appearance: none;
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%239D7FC7' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+                    background-repeat: no-repeat;
+                    background-position: right 0.75rem center;
+                    background-size: 14px;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 2px 10px rgba(157, 127, 199, 0.15);
+                }
+                
+                .sort-select:hover {
+                    border-color: #9D7FC7;
+                    box-shadow: 0 4px 15px rgba(157, 127, 199, 0.25);
+                    transform: translateY(-1px);
+                    background-color: #F5F0FA;
+                }
+                
+                .sort-select:focus {
+                    outline: none;
+                    border-color: #9D7FC7;
+                    box-shadow: 0 0 0 3px rgba(157, 127, 199, 0.2), 0 4px 15px rgba(157, 127, 199, 0.3);
+                    background-color: white;
+                    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238B6FC7' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+                    background-repeat: no-repeat;
+                    background-position: right 0.75rem center;
+                    background-size: 14px;
+                }
+                
+                /* Dropdown options styling - Enhanced for visibility */
+                .sort-select option {
+                    padding: 0.85rem 1.2rem;
+                    background: white !important;
+                    color: #555 !important;
+                    font-weight: 500;
+                    font-size: 0.9rem;
+                    border: none;
+                    min-height: 44px;
+                    line-height: 1.6;
+                    transition: all 0.2s ease;
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    appearance: none;
+                }
+                
+                /* Hover state for options - Enhanced */
+                .sort-select option:hover,
+                .sort-select option:focus {
+                    background: linear-gradient(135deg, #F5F0FA 0%, #E8DFF0 100%) !important;
+                    color: #7A5FB8 !important;
+                    font-weight: 600;
+                }
+                
+                /* Selected option - MUST be visible with strong styling */
+                .sort-select option:checked,
+                .sort-select option[selected],
+                .sort-select option[selected="selected"] {
+                    background: linear-gradient(135deg, #9D7FC7 0%, #8B6FC7 100%) !important;
+                    background-color: #9D7FC7 !important;
+                    color: white !important;
+                    font-weight: 600 !important;
+                    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+                }
+                
+                /* Ensure selected option is visible when dropdown is open */
+                .sort-select:focus option:checked,
+                .sort-select:active option:checked,
+                .sort-select:focus option[selected],
+                .sort-select:active option[selected],
+                .sort-select:focus option[selected="selected"],
+                .sort-select:active option[selected="selected"] {
+                    background: linear-gradient(135deg, #9D7FC7 0%, #8B6FC7 100%) !important;
+                    background-color: #9D7FC7 !important;
+                    color: white !important;
+                    font-weight: 600 !important;
+                    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+                }
+                
+                /* For WebKit browsers (Chrome, Safari, Edge) - Enhanced */
+                .sort-select option:checked:not(:disabled),
+                .sort-select option[selected]:not(:disabled) {
+                    background: linear-gradient(135deg, #9D7FC7 0%, #8B6FC7 100%) !important;
+                    background-color: #9D7FC7 !important;
+                    color: white !important;
+                    font-weight: 600 !important;
+                    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+                }
+                
+                /* Firefox specific - Enhanced */
+                @-moz-document url-prefix() {
+                    .sort-select option:checked,
+                    .sort-select option[selected] {
+                        background: linear-gradient(135deg, #9D7FC7 0%, #8B6FC7 100%) !important;
+                        background-color: #9D7FC7 !important;
+                        color: white !important;
+                        font-weight: 600 !important;
+                        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+                    }
+                }
+                
+                /* Additional WebKit specific rules */
+                .sort-select option::-webkit-scrollbar {
+                    width: 8px;
+                }
+                
+                .sort-select option::-webkit-scrollbar-track {
+                    background: #F5F0FA;
+                }
+                
+                .sort-select option::-webkit-scrollbar-thumb {
+                    background: linear-gradient(135deg, #9D7FC7 0%, #8B6FC7 100%);
+                    border-radius: 4px;
+                }
+                
+                .sort-label {
+                    color: #7A5FB8;
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                    margin-right: 0.75rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                }
+                
+                .sort-label i {
+                    color: #9D7FC7;
+                    font-size: 0.95rem;
+                }
+            </style>
+            
+            <div class="filter-sidebar">
+                <div class="card filter-card mb-4">
+                    <div class="filter-header">
+                        <h5>
+                            <i class="fas fa-filter"></i>
+                            Filtreler
+                        </h5>
+                    </div>
+                    <div class="filter-body">
+                        <!-- Category Filter -->
+                        <div class="filter-section">
+                            <div class="filter-title">
+                                <i class="fas fa-list"></i>
+                                Kategoriler
+                            </div>
+                            <div id="kategori-filtreler" class="filter-content">
+                                <!-- Categories will be loaded via AJAX -->
+                                <div class="text-center py-3">
+                                    <div class="spinner-border spinner-border-sm" role="status">
+                                        <span class="visually-hidden">Yükleniyor...</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Price Range Filter -->
-                    <div class="mb-4">
-                        <h6 class="fw-bold mb-3">Fiyat Aralığı</h6>
-                        <div class="d-flex align-items-center">
-                            <input type="number" id="min-fiyat" class="form-control form-control-sm" placeholder="Min">
-                            <span class="mx-2">-</span>
-                            <input type="number" id="max-fiyat" class="form-control form-control-sm" placeholder="Max">
+                        <!-- Price Range Filter -->
+                        <div class="filter-section">
+                            <div class="filter-title">
+                                <i class="fas fa-tag"></i>
+                                Fiyat Aralığı
+                            </div>
+                            <div class="price-inputs">
+                                <input type="number" id="min-fiyat" class="form-control" placeholder="Min ₺">
+                                <span class="price-separator">-</span>
+                                <input type="number" id="max-fiyat" class="form-control" placeholder="Max ₺">
+                            </div>
+                            <button id="fiyat-filtrele" class="filter-btn">
+                                <i class="fas fa-check me-2"></i>Uygula
+                            </button>
                         </div>
-                        <button id="fiyat-filtrele" class="btn btn-sm btn-outline-primary mt-2 w-100">Uygula</button>
-                    </div>
 
-                    <!-- Attributes Filter -->
-                    <div id="nitelik-filtreler">
-                        <!-- Attributes will be loaded via AJAX -->
-                    </div>
-                    
-                    <!-- Brands Filter -->
-                    <div class="mb-4">
-                        <h6 class="fw-bold mb-3">Markalar</h6>
-                        <div id="marka-filtreler" class="overflow-auto" style="max-height: 200px;">
-                            <!-- Brands will be loaded via AJAX -->
-                            <div class="spinner-border spinner-border-sm text-primary" role="status">
-                                <span class="visually-hidden">Yükleniyor...</span>
+                        <!-- Attributes Filter -->
+                        <div id="nitelik-filtreler" class="filter-section">
+                            <!-- Attributes will be loaded via AJAX -->
+                        </div>
+                        
+                        <!-- Brands Filter -->
+                        <div class="filter-section">
+                            <div class="filter-title">
+                                <i class="fas fa-certificate"></i>
+                                Markalar
+                            </div>
+                            <div id="marka-filtreler" class="filter-content">
+                                <!-- Brands will be loaded via AJAX -->
+                                <div class="text-center py-3">
+                                    <div class="spinner-border spinner-border-sm" role="status">
+                                        <span class="visually-hidden">Yükleniyor...</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Reset Filters Button -->
-                    <button id="reset-filtreler" class="btn btn-danger w-100">Filtreleri Temizle</button>
+                        <!-- Reset Filters Button -->
+                        <button id="reset-filtreler" class="reset-btn">
+                            <i class="fas fa-redo me-2"></i>Filtreleri Temizle
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -69,14 +519,19 @@ include 'header.php';
                     </div>
                 </div>
                 <div class="d-flex align-items-center">
-                    <label for="siralama" class="me-2">Sırala:</label>
-                    <select id="siralama" class="form-select form-select-sm" style="width: 200px;">
-                        <option value="default">Varsayılan Sıralama</option>
-                        <option value="newest">En Yeniler</option>
-                        <option value="price_asc">Fiyat (Düşükten Yükseğe)</option>
-                        <option value="price_desc">Fiyat (Yüksekten Düşüğe)</option>
-                        <option value="popular">En Çok Ziyaret Edilenler</option>
-                    </select>
+                    <label for="siralama" class="sort-label">
+                        <i class="fas fa-sort-amount-down"></i>
+                        Sırala:
+                    </label>
+                    <div class="sort-wrapper">
+                        <select id="siralama" class="sort-select">
+                            <option value="default">Varsayılan Sıralama</option>
+                            <option value="newest">En Yeniler</option>
+                            <option value="price_asc">Fiyat (Düşükten Yükseğe)</option>
+                            <option value="price_desc">Fiyat (Yüksekten Düşüğe)</option>
+                            <option value="popular">En Çok Ziyaret Edilenler</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
@@ -184,10 +639,59 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Event listeners
-    document.getElementById('siralama').addEventListener('change', function() {
+    const sortSelect = document.getElementById('siralama');
+    
+    // Update selected attribute when option changes
+    sortSelect.addEventListener('change', function() {
         filterState.siralama = this.value;
         filterState.sayfa = 1;
+        
+        // Update selected attribute for all options
+        Array.from(this.options).forEach((option, index) => {
+            if (index === this.selectedIndex) {
+                option.setAttribute('selected', 'selected');
+                option.selected = true;
+            } else {
+                option.removeAttribute('selected');
+                option.selected = false;
+            }
+        });
+        
         loadUrunler();
+    });
+    
+    // Set initial selected attribute
+    if (sortSelect.selectedIndex >= 0) {
+        const selectedOption = sortSelect.options[sortSelect.selectedIndex];
+        selectedOption.setAttribute('selected', 'selected');
+        selectedOption.selected = true;
+    }
+    
+    // Ensure selected option is visible when dropdown opens
+    sortSelect.addEventListener('mousedown', function() {
+        // Force update selected attribute before dropdown opens
+        const selectedOption = this.options[this.selectedIndex];
+        if (selectedOption) {
+            // Remove selected from all options
+            Array.from(this.options).forEach(opt => {
+                opt.removeAttribute('selected');
+            });
+            // Set selected on current option
+            selectedOption.setAttribute('selected', 'selected');
+            selectedOption.selected = true;
+        }
+    });
+    
+    // Also update on focus
+    sortSelect.addEventListener('focus', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        if (selectedOption) {
+            Array.from(this.options).forEach(opt => {
+                opt.removeAttribute('selected');
+            });
+            selectedOption.setAttribute('selected', 'selected');
+            selectedOption.selected = true;
+        }
     });
     
     // Clear search button event listener
@@ -351,19 +855,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // Helper function to render a category item
     function renderCategoryItem(category, parentElement) {
         const li = document.createElement('li');
-        li.className = 'mb-2';
+        li.className = 'mb-0';
         
         const checkboxWrapper = document.createElement('div');
-        checkboxWrapper.className = 'd-flex align-items-center';
+        checkboxWrapper.className = 'filter-checkbox';
         
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
-        checkbox.className = 'form-check-input me-2';
         checkbox.id = `category-${category.id}`;
         checkbox.value = category.id;
         
         const label = document.createElement('label');
-        label.className = 'form-check-label';
         label.htmlFor = `category-${category.id}`;
         label.textContent = category.kategori_isim;
         
@@ -449,10 +951,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         markalar.forEach(marka => {
             const div = document.createElement('div');
-            div.className = 'form-check mb-2';
+            div.className = 'filter-checkbox';
             
             const input = document.createElement('input');
-            input.className = 'form-check-input';
             input.type = 'checkbox';
             input.id = `marka-${marka.id}`;
             input.value = marka.id;
@@ -463,7 +964,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             const label = document.createElement('label');
-            label.className = 'form-check-label';
             label.htmlFor = `marka-${marka.id}`;
             label.textContent = marka.marka_isim;
             
@@ -561,21 +1061,20 @@ document.addEventListener('DOMContentLoaded', function() {
         
         nitelikler.forEach(nitelik => {
             const attributeDiv = document.createElement('div');
-            attributeDiv.className = 'mb-4';
+            attributeDiv.className = 'attribute-group';
             
-            const attributeTitle = document.createElement('h6');
-            attributeTitle.className = 'fw-bold mb-3';
-            attributeTitle.textContent = nitelik.ad;
+            const attributeTitle = document.createElement('div');
+            attributeTitle.className = 'attribute-title';
+            attributeTitle.innerHTML = `<i class="fas fa-sliders-h"></i>${nitelik.ad}`;
             
             attributeDiv.appendChild(attributeTitle);
             
             // Create checkboxes for each attribute value
             nitelik.degerler.forEach(deger => {
                 const div = document.createElement('div');
-                div.className = 'form-check mb-2';
+                div.className = 'filter-checkbox';
                 
                 const input = document.createElement('input');
-                input.className = 'form-check-input';
                 input.type = 'checkbox';
                 input.id = `nitelik-${nitelik.nitelik_id}-${deger.deger_id}`;
                 input.dataset.nitelikId = nitelik.nitelik_id;
@@ -588,7 +1087,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 
                 const label = document.createElement('label');
-                label.className = 'form-check-label';
                 label.htmlFor = `nitelik-${nitelik.nitelik_id}-${deger.deger_id}`;
                 label.textContent = deger.deger;
                 
@@ -705,7 +1203,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 
                 const label = document.createElement('label');
-                label.className = 'form-check-label';
                 label.htmlFor = `nitelik-${nitelik.nitelik_id}-${deger.deger_id}`;
                 label.textContent = deger.deger;
                 

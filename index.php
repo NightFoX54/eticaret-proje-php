@@ -49,7 +49,7 @@ include 'header.php';
 <section class="mb-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Popüler Ürünler</h2>
-        <a href="#" class="btn btn-outline-primary btn-sm">Tümünü Gör</a>
+        <a href="#" class="btn btn-outline-primary btn-sm" style="border-color: #9D7FC7; color: #9D7FC7;">Tümünü Gör</a>
     </div>
     
     <div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-4" id="popular-products">
@@ -92,7 +92,7 @@ include 'header.php';
 <section class="mb-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Yeni Gelenler</h2>
-        <a href="#" class="btn btn-outline-primary btn-sm">Tümünü Gör</a>
+        <a href="#" class="btn btn-outline-primary btn-sm" style="border-color: #9D7FC7; color: #9D7FC7;">Tümünü Gör</a>
     </div>
     
     <div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-4" id="new-products">
@@ -223,7 +223,7 @@ include 'header.php';
                                         </div>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <p class="fw-bold mb-0">${parseFloat(product.urun_fiyat).toLocaleString('tr-TR', {style:'currency', currency:'TRY'})}</p>
-                                            <a href="urun.php?id=${product.id}" class="btn btn-primary btn-sm">
+                                            <a href="urun.php?id=${product.id}" class="btn btn-primary btn-sm" style="background: linear-gradient(135deg, #9D7FC7 0%, #8B6FC7 100%); border: none;">
                                                 <i class="fas fa-eye"></i> İncele
                                             </a>
                                         </div>

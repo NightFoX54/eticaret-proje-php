@@ -1025,7 +1025,7 @@ if (isset($_GET['islem']) && $_GET['islem'] == 'urun_getir') {
         $resim_sor->execute(['urun_id' => $urun_id]);
         $resimler = $resim_sor->fetchAll(PDO::FETCH_ASSOC);
         
-        // Ürün niteliklerini getir
+        // Ürün niteliklerini getir (sadece durum=1 olan seçeneklerden)
         $nitelikler = [];
         $nitelik_sor = $db->prepare("
             SELECT DISTINCT n.nitelik_id, n.ad
@@ -1038,7 +1038,7 @@ if (isset($_GET['islem']) && $_GET['islem'] == 'urun_getir') {
         $nitelik_sor->execute(['urun_id' => $urun_id]);
         
         while ($nitelik = $nitelik_sor->fetch(PDO::FETCH_ASSOC)) {
-            // Her nitelik için değerleri getir
+            // Her nitelik için değerleri getir (sadece durum=1 olan seçeneklerden)
             $deger_sor = $db->prepare("
                 SELECT DISTINCT nd.deger_id, nd.deger
                 FROM urun_secenek us
@@ -1059,14 +1059,17 @@ if (isset($_GET['islem']) && $_GET['islem'] == 'urun_getir') {
                 ];
             }
             
-            $nitelikler[] = [
-                'id' => $nitelik['nitelik_id'],
-                'ad' => $nitelik['ad'],
-                'degerler' => $degerler
-            ];
+            // Sadece değerleri olan nitelikleri ekle
+            if (!empty($degerler)) {
+                $nitelikler[] = [
+                    'id' => $nitelik['nitelik_id'],
+                    'ad' => $nitelik['ad'],
+                    'degerler' => $degerler
+                ];
+            }
         }
         
-        // Ürün varyasyonlarını getir
+        // Ürün varyasyonlarını getir (sadece durum=1 olan seçenekler)
         $varyasyonlar = [];
         $secenek_sor = $db->prepare("
             SELECT us.secenek_id, us.fiyat, us.stok
@@ -1076,13 +1079,14 @@ if (isset($_GET['islem']) && $_GET['islem'] == 'urun_getir') {
         $secenek_sor->execute(['urun_id' => $urun_id]);
         
         while ($secenek = $secenek_sor->fetch(PDO::FETCH_ASSOC)) {
-            // Her seçenek için nitelik değerlerini getir
+            // Her seçenek için nitelik değerlerini getir (sadece durum=1 olan seçeneklerden)
             $deger_sor = $db->prepare("
                 SELECT nd.deger_id, nd.deger, n.nitelik_id, n.ad as nitelik_ad
                 FROM secenek_nitelik_degeri snd
                 JOIN nitelik_degeri nd ON snd.deger_id = nd.deger_id
                 JOIN nitelik n ON nd.nitelik_id = n.nitelik_id
-                WHERE snd.secenek_id = :secenek_id
+                JOIN urun_secenek us ON snd.secenek_id = us.secenek_id
+                WHERE snd.secenek_id = :secenek_id AND us.durum = 1
             ");
             $deger_sor->execute(['secenek_id' => $secenek['secenek_id']]);
             
@@ -3113,7 +3117,7 @@ if (isset($_GET['islem']) && $_GET['islem'] == 'urun_detay') {
             JOIN secenek_nitelik_degeri snd ON us.secenek_id = snd.secenek_id
             JOIN nitelik_degeri nd ON snd.deger_id = nd.deger_id
             JOIN nitelik n ON nd.nitelik_id = n.nitelik_id
-            WHERE us.urun_id = :urun_id
+            WHERE us.urun_id = :urun_id AND us.durum = 1
         ");
         $nitelik_sor->execute(['urun_id' => $urun_id]);
         
@@ -3124,7 +3128,7 @@ if (isset($_GET['islem']) && $_GET['islem'] == 'urun_detay') {
                 FROM urun_secenek us
                 JOIN secenek_nitelik_degeri snd ON us.secenek_id = snd.secenek_id
                 JOIN nitelik_degeri nd ON snd.deger_id = nd.deger_id
-                WHERE us.urun_id = :urun_id AND nd.nitelik_id = :nitelik_id
+                WHERE us.urun_id = :urun_id AND nd.nitelik_id = :nitelik_id AND us.durum = 1
             ");
             $deger_sor->execute([
                 'urun_id' => $urun_id,
