@@ -1,0 +1,17 @@
+{
+    "name": "e1a54/eticaret",
+    "autoload": {
+        "psr-4": {
+            "E1a54\\Eticaret\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Berkay Mustafa Arıkan",
+            "email": "158609860+NightFoX54@users.noreply.github.com"
+        }
+    ],
+    "require": {
+        "whichbrowser/parser": "^2.1"
+    }
+}

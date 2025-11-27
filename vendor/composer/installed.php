@@ -1,0 +1,41 @@
+<?php return array(
+    'root' => array(
+        'name' => 'e1a54/eticaret',
+        'pretty_version' => '1.0.0+no-version-set',
+        'version' => '1.0.0.0',
+        'reference' => null,
+        'type' => 'library',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'dev' => true,
+    ),
+    'versions' => array(
+        'e1a54/eticaret' => array(
+            'pretty_version' => '1.0.0+no-version-set',
+            'version' => '1.0.0.0',
+            'reference' => null,
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'psr/cache' => array(
+            'pretty_version' => '3.0.0',
+            'version' => '3.0.0.0',
+            'reference' => 'aa5030cfa5405eccfdcb1083ce040c2cb8d253bf',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../psr/cache',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'whichbrowser/parser' => array(
+            'pretty_version' => 'v2.1.8',
+            'version' => '2.1.8.0',
+            'reference' => '581d614d686bfbec3529ad60562a5213ac5d8d72',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../whichbrowser/parser',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+    ),
+);
