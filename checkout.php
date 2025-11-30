@@ -471,7 +471,7 @@ function showAddAddressModal() {
 
 function addNewAddress() {
     const formData = new FormData($('#addAddressForm')[0]);
-    formData.append('islem', 'adres_ekle');
+    formData.append('islem', 'add_address');
     
     $.ajax({
         url: 'nedmin/netting/islem.php',
